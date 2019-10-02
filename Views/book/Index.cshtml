@@ -1,4 +1,5 @@
 ﻿@model List<book>
+@using databasr2.Extension
 @{
     ViewData["Title"] = "รายการหนังสือ";
 }
@@ -19,6 +20,9 @@
         <th>
             @Html.DisplayNameFor(m => m[0].Price)
         </th>
+        <th>
+            @Html.DisplayNameFor(m => m[0].BookType)
+        </th>
         @if (User.Identity.IsAuthenticated)
         {
             <th>
@@ -29,25 +33,32 @@
 
     @foreach (var item in Model)
     {
-    <tr>
-        <td>
+<tr>
+    <td>
         @Html.DisplayFor(m => item.Id)
-        </td>
-        <td>
+    </td>
+    <td>
         @Html.DisplayFor(m => item.Name)
-        </td>
-        <td>
+    </td>
+    <td>
         @Html.DisplayFor(m => item.Price)
-        </td>
-    @if (User.Identity.IsAuthenticated)
+    </td>
+    <td>
+        @item.BookType.GetDisNameplay()
+    </td>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("User"))
     {
-        <td>
-            <a asp-controller="Book" asp-action="BookEdit" asp-route-Id="@item.Id">แก้ไข</a>
-            <a asp-controller="Book" asp-action="BookDelete" asp-route-Id="@item.Id">ลบทิ้ง</a>
-        </td>
+<td>
+    <a asp-controller="Book" asp-action="BookEdit" asp-route-Id="@item.Id">แก้ไข</a>
+    @if (User.IsInRole("Administrator"))
+    {
+        <a asp-controller="Book" asp-action="BookDelete" asp-route-Id="@item.Id">ลบทิ้ง</a>
     }
 
-    </tr>
+</td>
+    }
+
+</tr>
     }
 
 </table>

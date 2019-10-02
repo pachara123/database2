@@ -23,7 +23,7 @@ namespace databasr2.Controllers
             var model = await _context.books.ToListAsync();
             return View(model);
         }
-        [Authorize]
+        [Authorize(Roles = "User")]
         public IActionResult AddBook()
         {
             return View();
@@ -31,7 +31,7 @@ namespace databasr2.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> AddBook(book model)
         {
             if (ModelState.IsValid)
@@ -76,14 +76,15 @@ namespace databasr2.Controllers
                 {
                     book1.Name = model.Name;
                     book1.Price = model.Price;
+                    book1.BookType = model.BookType;
 
                     await _context.SaveChangesAsync();
                 }
                 return RedirectToAction("Index");
             }
-            return View(model)   
+            return View(model);   
         }
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> BookDelete(int Id)
         {
             var book1 = await _context.books.FirstOrDefaultAsync(prayuth => prayuth.Id == Id);
